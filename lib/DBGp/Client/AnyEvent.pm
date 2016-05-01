@@ -1,0 +1,56 @@
+package DBGp::Client::AnyEvent;
+
+use strict;
+use warning;
+
+=head1 NAME
+
+DBGp::Client::AnyEvent - AnyEvent-based client for the DBGp debugger protocol
+
+=head1 SYNOPSIS
+
+    $listener = DBGp::Client::Listener->new(
+        port          => 9000,
+        on_connection => sub {
+            my ($client) = @_;
+
+            $wait_res = $client->send_command(
+                undef, # no callback
+                'breakpoint_set', '-t', 'conditional',
+                                  '-f', 'file:///path/to/file.pl',
+                                  '-n', $line,
+                                  '--',
+                                  encode_base64("$command; 0"),
+            );
+            $res = $wait_res->recv;
+            die $res->message if $res->is_error;
+
+            # send and receive other commands
+        },
+    );
+    $listener->listen;
+
+=head1 DESCRIPTION
+
+A thin L<AnyEvent> wrapper on top of L<DBGp::Client>.
+
+=cut
+
+our $VERSION = '0.01';
+
+1;
+
+__END__
+
+=head1 AUTHOR
+
+Mattia Barbon <mbarbon@cpan.org>
+
+=head1 LICENSE
+
+Copyright (c) 2016 Mattia Barbon. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
