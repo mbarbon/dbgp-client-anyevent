@@ -22,7 +22,7 @@ sub new {
 
             $weak_self->{handle} = undef;
             $handle->destroy;
-            $self->{connection}->closed;
+            $weak_self->{connection}->closed;
         },
         on_read     => sub {
             my ($handle) = @_;
@@ -35,7 +35,7 @@ sub new {
 
             $weak_self->{handle} = undef;
             $handle->destroy;
-            $self->{connection}->closed;
+            $weak_self->{connection}->closed;
         },
     );
 
