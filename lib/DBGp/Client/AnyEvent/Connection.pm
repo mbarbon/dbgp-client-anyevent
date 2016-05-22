@@ -28,7 +28,8 @@ sub new {
             my ($handle) = @_;
 
             $weak_self->{connection}->add_data($handle->{rbuf});
-            substr $handle->{rbuf}, 0, length($handle->{rbuf}), '';
+            substr $handle->{rbuf}, 0, length($handle->{rbuf}), ''
+                if defined $handle->{rbuf};
         },
         on_eof      => sub {
             my ($handle) = @_;
