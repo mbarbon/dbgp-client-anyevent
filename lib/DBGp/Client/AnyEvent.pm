@@ -9,26 +9,26 @@ DBGp::Client::AnyEvent - AnyEvent-based client for the DBGp debugger protocol
 
 =head1 SYNOPSIS
 
-    $listener = DBGp::Client::Listener->new(
+    $connected = AnyEvent->condvar;
+    $listener = DBGp::Client::AnyEvent::Listener->new(
         port          => 9000,
-        on_connection => sub {
-            my ($client) = @_;
-
-            $wait_res = $client->send_command(
-                undef, # no callback
-                'breakpoint_set', '-t', 'conditional',
-                                  '-f', 'file:///path/to/file.pl',
-                                  '-n', $line,
-                                  '--',
-                                  encode_base64("$command; 0"),
-            );
-            $res = $wait_res->recv;
-            die $res->message if $res->is_error;
-
-            # send and receive other commands
-        },
+        on_connection => sub { $connected->send($_[0]) },
     );
     $listener->listen;
+
+    $client = $connected->recv;
+    $wait_res = $client->send_command(
+        undef, # no callback
+        'breakpoint_set', '-t', 'conditional',
+                          '-f', 'file:///path/to/file.pl',
+                          '-n', $line,
+                          '--',
+                          encode_base64("$command; 0"),
+    );
+    $res = $wait_res->recv;
+    die $res->message if $res->is_error;
+
+    # send and receive other commands
 
 =head1 DESCRIPTION
 
