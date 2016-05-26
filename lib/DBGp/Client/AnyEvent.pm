@@ -36,7 +36,7 @@ A thin L<AnyEvent> wrapper on top of L<DBGp::Client>.
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 1;
 
