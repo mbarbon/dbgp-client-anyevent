@@ -17,7 +17,7 @@ my $build = Module::Build->new(
         'Module::Build' => 0.42,
     },
     test_requires => {
-        'Test::DBGp'                => '0.03',
+        'Test::DBGp'                => '0.05',
     },
     meta_merge  => {
         resources   => {
