@@ -1,5 +1,9 @@
 Revision history for DBGp-Client-AnyEvent
 
+0.04     2016-05-26 11:58:49 CEST
+
+    - Typo fix
+
 0.03     2016-05-26 11:39:26 CEST
 
     - Packaging fix
