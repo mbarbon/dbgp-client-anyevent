@@ -1,7 +1,7 @@
 package DBGp::Client::AnyEvent;
 
 use strict;
-use warning;
+use warnings;
 
 =head1 NAME
 
