@@ -11,7 +11,7 @@ my $build = Module::Build->new(
     requires    => {
         'perl'                  => '5.10.0',
         'AnyEvent'              => '1.0031',
-        'DBGp::Client'          => '0.08',
+        'DBGp::Client'          => '0.09',
     },
     configure_requires => {
         'Module::Build' => 0.42,

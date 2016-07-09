@@ -11,6 +11,8 @@ sub new {
     my ($class, %args) = @_;
     my $self = bless {
         handle      => undef,
+        on_stream   => undef,
+        on_notify   => undef,
         connection  => DBGp::Client::AsyncConnection->new(socket => $args{socket}),
     }, $class;
     my $weak_self = $self;
@@ -41,6 +43,12 @@ sub new {
     );
 
     $self->{handle} = $handle;
+    $self->{on_stream_cb} = sub {
+        $weak_self->{on_stream}->(@_);
+    };
+    $self->{on_notify_cb} = sub {
+        $weak_self->{on_notify}->(@_);
+    };
 
     return $self;
 }
@@ -72,6 +80,28 @@ sub send_command {
     $self->{connection}->send_command($callback, @rest);
 
     return $condvar;
+}
+
+sub on_stream {
+    my ($self, $cb) = @_;
+
+    $self->{on_stream} = $cb;
+    if ($cb) {
+        $self->{connection}->on_stream($self->{on_stream_cb});
+    } else {
+        $self->{connection}->on_stream(undef);
+    }
+}
+
+sub on_notify {
+    my ($self, $cb) = @_;
+
+    $self->{on_notify} = $cb;
+    if ($cb) {
+        $self->{connection}->on_notify($self->{on_notify_cb});
+    } else {
+        $self->{connection}->on_notify(undef);
+    }
 }
 
 1;

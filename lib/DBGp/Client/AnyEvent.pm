@@ -17,6 +17,10 @@ DBGp::Client::AnyEvent - AnyEvent-based client for the DBGp debugger protocol
     $listener->listen;
 
     $client = $connected->recv;
+    $client->on_stream(sub {
+        printf "Output from process (%s)\n---\n%s\n---\n",
+            $_[0]->type, $_[0]->content;
+    });
     $wait_res = $client->send_command(
         undef, # no callback
         'breakpoint_set', '-t', 'conditional',

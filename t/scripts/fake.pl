@@ -51,6 +51,13 @@ my $res3 = <<'EOT';
           transaction_id="3"/>
 EOT
 
+my $out = <<'EOT';
+<stream type="stdout"
+        encoding="base64">
+U29tZSBvdXRwdXQK
+</stream>
+EOT
+
 syswrite $sock, length($init) . "\x00" . $init . "\x00";
 
 eatline();
@@ -58,6 +65,10 @@ eatline();
 syswrite $sock, length($res1) . "\x00" . $res1 . "\x00";
 
 eatline();
+
+syswrite $sock, length($out) . "\x00" . $out . "\x00";
+
+# async, so no command expected here
 
 syswrite $sock, length($res2) . "\x00" . $res2 . "\x00";
 
