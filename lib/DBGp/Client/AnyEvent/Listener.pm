@@ -12,6 +12,7 @@ sub new {
     my $self = bless {
         port            => $args{port},
         path            => $args{path},
+        mode            => $args{mode},
         on_connection   => $args{on_connection},
         tcp_guard       => undef,
     }, $class;
@@ -27,10 +28,14 @@ sub listen {
     my $weak_self = $self;
     weaken($weak_self);
     my $cb = sub { $weak_self->_new_connection($_[0]) };
+    my $prepare = ($self->{path} && defined $self->{mode}) ? sub {
+        chmod $weak_self->{mode}, $weak_self->{path}
+            or die "Unable to change file mode for socket: $!";
+    } : undef;
     if ($self->{port}) {
         $self->{guard} = tcp_server('127.0.0.1', $self->{port}, $cb);
     } elsif ($self->{path}) {
-        $self->{guard} = tcp_server('unix/', $self->{path}, $cb);
+        $self->{guard} = tcp_server('unix/', $self->{path}, $cb, $prepare);
     }
 }
 
